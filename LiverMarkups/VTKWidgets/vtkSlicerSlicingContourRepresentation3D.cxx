@@ -134,8 +134,23 @@ void vtkSlicerSlicingContourRepresentation3D::UpdateFromMRML(vtkMRMLNode* caller
  for(int index = 0; index < VBOs->GetNumberOfItems(); ++index)
    {
    auto VBO = vtkOpenGLVertexBufferObject::SafeDownCast(VBOs->GetItemAsObject(index));
+   if(!VBO)
+     {
+     vtkErrorMacro("Error: could not retrieve vtkOpenGLVertexBufferObject");
+     return;
+     }
+
    auto scale = VBO->GetScale();
    auto shift = VBO->GetShift();
+
+   if (scale.size() != 3  || shift.size() != 3)
+     {
+     scale.clear();
+     scale.push_back(1.0f);scale.push_back(1.0f);scale.push_back(1.0f);
+     shift.clear();
+     shift.push_back(0.0f);shift.push_back(0.0f);shift.push_back(0.0f);
+     return;
+     }
 
    float middlePointPositionScaled[4] = {
      (middlePointPosition[0] - shift[0]) * scale[0],
@@ -147,7 +162,7 @@ void vtkSlicerSlicingContourRepresentation3D::UpdateFromMRML(vtkMRMLNode* caller
    auto fragmentUniforms = actor->GetShaderProperty()->GetFragmentCustomUniforms();
    fragmentUniforms->SetUniform4f("planePositionMC", middlePointPositionScaled);
    fragmentUniforms->SetUniform4f("planeNormalMC", planeNormal);
-   fragmentUniforms->SetUniformf("contourThickness", 2.0f*(scale[0]+scale[1])/2.0f);
+   fragmentUniforms->SetUniformf("contourThickness", 20.0f*(scale[0]+scale[1])/2.0f);
    fragmentUniforms->SetUniformi("contourVisibility", 1);
    }
 
