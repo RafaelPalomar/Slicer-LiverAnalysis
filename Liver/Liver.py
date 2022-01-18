@@ -416,8 +416,13 @@ class LiverTest(ScriptedLoadableModuleTest):
 
     import SampleData
     registerSampleData()
+<<<<<<< Updated upstream
     inputVolume = SampleData.downloadSample('LiverVolume000')
+=======
+    referenceVolume = SampleData.downloadSample('LiverVolume000')
+>>>>>>> Stashed changes
     inputSegmentation = SampleData.downloadSample('LiverSegmentation000')
+
     self.delayDisplay('Loaded test data set')
 
     # slicingContourMarkupNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLMarkupsSlicingContourNode")
